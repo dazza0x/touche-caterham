@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Touché Caterham</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ivory:    #F5EFE6;
+      --cream:    #EAE0D4;
+      --espresso: #3B3530;
+      --bark:     #5C524A;
+      --copper:   #C4957A;
+      --rose:     #C4A0A0;
+      --mist:     #9E9188;
+      --white:    #FAF6F1;
+      --red:      #c0392b;
+      --green:    #27ae60;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'Jost', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--ivory); color: var(--espresso); font-family: var(--font-body); font-weight: 300; line-height: 1.6; min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+    input, select, textarea { font-family: var(--font-body); font-weight: 300; }
+
+    /* ── Login ──────────────────────────────────────── */
+    #loginScreen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: var(--espresso);
+    }
+    .login-box {
+      background: var(--ivory); padding: 3rem 2.5rem; width: 100%; max-width: 360px;
+      text-align: center;
+    }
+    .login-box .brand {
+      font-family: var(--font-display); font-style: italic; font-size: 2rem;
+      color: var(--copper); margin-bottom: .25rem;
+    }
+    .login-box .sub { font-size: .65rem; letter-spacing: .22em; text-transform: uppercase; color: var(--mist); margin-bottom: 2rem; }
+    .login-box input[type="password"] {
+      width: 100%; padding: .75rem 1rem; border: 1px solid var(--cream);
+      background: var(--white); font-size: .9rem; color: var(--espresso);
+      outline: none; margin-bottom: 1rem; transition: border-color .2s;
+    }
+    .login-box input[type="password"]:focus { border-color: var(--copper); }
+    .login-box button {
+      width: 100%; padding: .8rem; background: var(--copper); color: var(--white);
+      border: none; font-family: var(--font-body); font-size: .75rem;
+      letter-spacing: .18em; text-transform: uppercase; cursor: pointer;
+      transition: background .2s;
+    }
+    .login-box button:hover { background: var(--bark); }
+    #loginError { color: var(--red); font-size: .78rem; margin-top: .75rem; min-height: 1.2em; }
+
+    /* ── Admin shell ────────────────────────────────── */
+    #adminPanel { display: none; min-height: 100vh; flex-direction: column; }
+    #adminPanel.visible { display: flex; }
+
+    .admin-header {
+      background: var(--espresso); padding: 1rem clamp(1rem,4vw,2.5rem);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem;
+    }
+    .admin-header .brand { font-family: var(--font-display); font-style: italic; font-size: 1.5rem; color: var(--copper); }
+    .admin-header .brand span { font-family: var(--font-body); font-style: normal; font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: var(--mist); margin-left: .6rem; }
+    .header-actions { display: flex; gap: .75rem; flex-wrap: wrap; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem 1.1rem; font-family: var(--font-body); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; border: none; cursor: pointer; transition: background .2s, color .2s; }
+    .btn-copper  { background: var(--copper); color: var(--white); }
+    .btn-copper:hover  { background: var(--bark); }
+    .btn-ghost-light  { background: transparent; border: 1px solid rgba(255,255,255,.2); color: var(--cream); }
+    .btn-ghost-light:hover { border-color: var(--copper); color: var(--copper); }
+    .btn-ghost   { background: transparent; border: 1px solid var(--cream); color: var(--bark); }
+    .btn-ghost:hover   { border-color: var(--copper); color: var(--copper); }
+    .btn-danger  { background: transparent; border: 1px solid rgba(192,57,43,.35); color: var(--red); }
+    .btn-danger:hover  { background: var(--red); color: var(--white); border-color: var(--red); }
+    .btn-green   { background: var(--green); color: var(--white); }
+    .btn-green:hover   { background: #219150; }
+    .btn-sm { padding: .3rem .7rem; font-size: .65rem; }
+
+    /* ── Tabs ───────────────────────────────────────── */
+    .admin-tabs { background: var(--cream); border-bottom: 1px solid rgba(196,149,122,.2); display: flex; padding: 0 clamp(1rem,4vw,2.5rem); }
+    .tab-btn {
+      padding: .9rem 1.5rem; font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
+      background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer;
+      color: var(--mist); transition: color .2s, border-color .2s;
+    }
+    .tab-btn:hover { color: var(--bark); }
+    .tab-btn.active { color: var(--copper); border-bottom-color: var(--copper); }
+
+    .admin-main { flex: 1; padding: 2rem clamp(1rem,4vw,2.5rem); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Section headings ───────────────────────────── */
+    .panel-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.75rem; }
+    .panel-title { font-family: var(--font-display); font-weight: 300; font-size: 1.8rem; color: var(--espresso); }
+    .panel-title em { font-style: italic; color: var(--copper); }
+
+    /* ── Prices panel ───────────────────────────────── */
+    .categories-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .category-card { background: var(--white); border: 1px solid rgba(196,149,122,.15); }
+    .category-head {
+      display: flex; align-items: center; gap: .75rem; padding: 1rem 1.25rem;
+      background: var(--cream); border-bottom: 1px solid rgba(196,149,122,.15);
+    }
+    .category-icon-input {
+      width: 2.5rem; padding: .3rem .4rem; text-align: center; border: 1px solid transparent;
+      background: transparent; font-size: 1rem; color: var(--copper);
+      border-radius: 3px; transition: border-color .2s;
+    }
+    .category-icon-input:focus { outline: none; border-color: var(--copper); background: var(--white); }
+    .category-name-input {
+      flex: 1; padding: .35rem .5rem; border: 1px solid transparent;
+      background: transparent; font-family: var(--font-display); font-size: 1.1rem;
+      color: var(--espresso); border-radius: 3px; transition: border-color .2s;
+    }
+    .category-name-input:focus { outline: none; border-color: var(--copper); background: var(--white); }
+
+    .services-table { width: 100%; border-collapse: collapse; }
+    .services-table th {
+      font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: var(--mist);
+      font-weight: 400; padding: .5rem 1.25rem; text-align: left;
+      border-bottom: 1px solid var(--cream);
+    }
+    .services-table th:last-child { text-align: right; }
+    .services-table td { padding: .5rem 1.25rem; border-bottom: 1px solid var(--cream); vertical-align: middle; }
+    .services-table tr:last-child td { border-bottom: none; }
+    .svc-name-input, .svc-price-input, .svc-label-input {
+      padding: .3rem .5rem; border: 1px solid var(--cream); background: var(--white);
+      font-family: var(--font-body); font-weight: 300; font-size: .85rem; color: var(--espresso);
+      outline: none; transition: border-color .2s; border-radius: 2px;
+    }
+    .svc-name-input:focus, .svc-price-input:focus, .svc-label-input:focus { border-color: var(--copper); }
+    .svc-name-input  { width: 100%; }
+    .svc-price-input { width: 80px; }
+    .svc-label-input { width: 140px; }
+    .svc-poa-wrap { display: flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--mist); }
+    .svc-poa-wrap input[type="checkbox"] { accent-color: var(--copper); width: 14px; height: 14px; cursor: pointer; }
+    .svc-actions { display: flex; gap: .4rem; justify-content: flex-end; }
+    .category-footer { padding: .75rem 1.25rem; border-top: 1px solid var(--cream); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+
+    /* ── Hours panel ────────────────────────────────── */
+    .hours-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(320px,1fr)); gap: 1px; background: rgba(196,149,122,.12); }
+    .hours-day-card { background: var(--white); padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .hours-day-name { width: 110px; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--bark); flex-shrink: 0; }
+    .hours-closed-wrap { display: flex; align-items: center; gap: .4rem; font-size: .78rem; color: var(--mist); cursor: pointer; }
+    .hours-closed-wrap input[type="checkbox"] { accent-color: var(--copper); width: 14px; height: 14px; }
+    .hours-times { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+    .hours-time-input {
+      padding: .3rem .5rem; border: 1px solid var(--cream); background: var(--white);
+      font-family: var(--font-body); font-size: .85rem; color: var(--espresso);
+      outline: none; width: 90px; transition: border-color .2s;
+    }
+    .hours-time-input:focus { border-color: var(--copper); }
+    .hours-time-sep { color: var(--mist); font-size: .8rem; }
+
+    /* ── Settings panel ─────────────────────────────── */
+    .settings-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(320px,1fr)); gap: 2rem; }
+    .settings-card { background: var(--white); border: 1px solid rgba(196,149,122,.15); padding: 1.75rem; }
+    .settings-card h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 300; margin-bottom: 1.25rem; color: var(--espresso); }
+    .field-group { margin-bottom: 1rem; }
+    .field-label { font-size: .65rem; letter-spacing: .18em; text-transform: uppercase; color: var(--mist); margin-bottom: .35rem; display: block; }
+    .field-input {
+      width: 100%; padding: .55rem .75rem; border: 1px solid var(--cream); background: var(--ivory);
+      font-family: var(--font-body); font-size: .88rem; color: var(--espresso);
+      outline: none; transition: border-color .2s;
+    }
+    .field-input:focus { border-color: var(--copper); background: var(--white); }
+    .field-help { font-size: .72rem; color: var(--mist); margin-top: .3rem; line-height: 1.5; }
+    .hash-display {
+      padding: .5rem .75rem; background: var(--cream); border: 1px solid rgba(196,149,122,.2);
+      font-family: monospace; font-size: .72rem; color: var(--bark); word-break: break-all;
+      margin-top: .5rem; display: none;
+    }
+
+    /* ── Toast ──────────────────────────────────────── */
+    #toast {
+      position: fixed; bottom: 2rem; right: 2rem; padding: .75rem 1.25rem;
+      background: var(--espresso); color: var(--cream); font-size: .8rem;
+      letter-spacing: .08em; z-index: 999; opacity: 0;
+      transition: opacity .3s; pointer-events: none;
+    }
+    #toast.show { opacity: 1; }
+    #toast.success { background: var(--green); }
+    #toast.error   { background: var(--red); }
+
+    /* ── Misc ───────────────────────────────────────── */
+    .divider-line { height: 1px; background: rgba(196,149,122,.15); margin: .75rem 0; }
+    @media (max-width: 600px) {
+      .services-table th:nth-child(3), .services-table td:nth-child(3) { display: none; }
+      .hours-day-card { gap: .6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Login ─────────────────────────────────────────── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="brand">Touché</div>
+    <div class="sub">Admin Panel</div>
+    <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password"
+           onkeydown="if(event.key==='Enter')doLogin()" />
+    <button onclick="doLogin()">Sign In</button>
+    <div id="loginError"></div>
+  </div>
+</div>
+
+<!-- ── Admin panel ────────────────────────────────────── -->
+<div id="adminPanel">
+
+  <header class="admin-header">
+    <div class="admin-header brand">
+      Touché <span>Admin</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-green" onclick="saveToGitHub()">&#8593; Save to GitHub</button>
+      <button class="btn btn-copper" onclick="downloadAll()">&#8595; Download JSON</button>
+      <a href="index.html" class="btn btn-ghost-light">&#8592; View Site</a>
+      <button class="btn btn-ghost-light" onclick="logout()">Log Out</button>
+    </div>
+  </header>
+
+  <nav class="admin-tabs">
+    <button class="tab-btn active" onclick="switchTab('prices',this)">Prices</button>
+    <button class="tab-btn" onclick="switchTab('hours',this)">Opening Hours</button>
+    <button class="tab-btn" onclick="switchTab('settings',this)">Settings</button>
+  </nav>
+
+  <main class="admin-main">
+
+    <!-- PRICES TAB -->
+    <div id="tab-prices" class="tab-panel active">
+      <div class="panel-header">
+        <h2 class="panel-title">Service <em>Prices</em></h2>
+        <button class="btn btn-copper" onclick="addCategory()">+ Add Category</button>
+      </div>
+      <div class="categories-list" id="categoriesList"></div>
+    </div>
+
+    <!-- HOURS TAB -->
+    <div id="tab-hours" class="tab-panel">
+      <div class="panel-header">
+        <h2 class="panel-title">Opening <em>Hours</em></h2>
+      </div>
+      <div class="hours-grid" id="hoursGrid"></div>
+      <p style="margin-top:1.25rem;font-size:.75rem;color:var(--mist);">
+        Note: Update the opening hours in the Schema.org block inside <code>index.html</code> too, for best SEO accuracy.
+      </p>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div id="tab-settings" class="tab-panel">
+      <div class="panel-header">
+        <h2 class="panel-title">Admin <em>Settings</em></h2>
+      </div>
+      <div class="settings-grid">
+
+        <div class="settings-card">
+          <h3>GitHub Direct Publish</h3>
+          <p style="font-size:.8rem;color:var(--mist);margin-bottom:1.25rem;line-height:1.6;">
+            Enter a GitHub Personal Access Token with <code>contents:write</code> scope to publish changes directly to the repo without downloading files.
+            The token is only stored for this session.
+          </p>
+          <div class="field-group">
+            <label class="field-label">GitHub Token</label>
+            <input type="password" id="ghToken" class="field-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                   oninput="saveGhSettings()" autocomplete="off" />
+            <div class="field-help">Create one at github.com → Settings → Developer settings → Personal access tokens</div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Repository Owner</label>
+            <input type="text" id="ghOwner" class="field-input" value="dazza0x" oninput="saveGhSettings()" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Repository Name</label>
+            <input type="text" id="ghRepo" class="field-input" value="touche-caterham" oninput="saveGhSettings()" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Branch</label>
+            <input type="text" id="ghBranch" class="field-input" value="main" oninput="saveGhSettings()" />
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <h3>Change Password</h3>
+          <p style="font-size:.8rem;color:var(--mist);margin-bottom:1.25rem;line-height:1.6;">
+            Enter a new password to generate its SHA-256 hash. Copy the hash and replace the
+            <code>ADMIN_HASH</code> constant at the top of the <code>&lt;script&gt;</code> block in <code>admin.html</code>.
+          </p>
+          <div class="field-group">
+            <label class="field-label">New Password</label>
+            <input type="password" id="newPasswordInput" class="field-input" placeholder="Enter new password" />
+          </div>
+          <button class="btn btn-copper" onclick="generateHash()" style="margin-bottom:.75rem;">Generate Hash</button>
+          <div class="field-label" style="margin-top:.5rem;">SHA-256 Hash (copy this into admin.html)</div>
+          <div class="hash-display" id="hashDisplay"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  // ─────────────────────────────────────────────────────────
+  // ADMIN PASSWORD HASH (SHA-256)
+  // Default password: Touche2024!
+  // To change: use the Settings tab to generate a new hash,
+  // then replace the value below.
+  // ─────────────────────────────────────────────────────────
+  const ADMIN_HASH = '77261a1fac84f22552900e34f486788be537b8cf1b22d4743d305083fdba3e23';
+
+  // ─── State ──────────────────────────────────────────────
+  let pricesData = { categories: [] };
+  let hoursData  = { days: [] };
+
+  // ─── Utilities ──────────────────────────────────────────
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  function toast(msg, type = '') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'show' + (type ? ' ' + type : '');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => { el.className = ''; }, 3200);
+  }
+
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+  // ─── Login ──────────────────────────────────────────────
+  async function doLogin() {
+    const pw = document.getElementById('passwordInput').value;
+    if (!pw) return;
+    const hash = await sha256(pw);
+    if (hash === ADMIN_HASH) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminPanel').classList.add('visible');
+      document.getElementById('loginError').textContent = '';
+      loadData();
+      restoreGhSettings();
+    } else {
+      document.getElementById('loginError').textContent = 'Incorrect password.';
+      document.getElementById('passwordInput').value = '';
+    }
+  }
+
+  function logout() {
+    document.getElementById('adminPanel').classList.remove('visible');
+    document.getElementById('loginScreen').style.display = '';
+    document.getElementById('passwordInput').value = '';
+  }
+
+  // ─── Data loading ────────────────────────────────────────
+  async function loadData() {
+    try {
+      const [p, h] = await Promise.all([
+        fetch('prices.json?t=' + Date.now()).then(r => r.json()),
+        fetch('hours.json?t='  + Date.now()).then(r => r.json())
+      ]);
+      pricesData = p;
+      hoursData  = h;
+    } catch(e) {
+      toast('Could not load JSON files — starting with empty data.', 'error');
+    }
+    renderCategories();
+    renderHoursGrid();
+  }
+
+  // ─── Tabs ────────────────────────────────────────────────
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // PRICES
+  // ═══════════════════════════════════════════════════════
+  function renderCategories() {
+    const list = document.getElementById('categoriesList');
+    list.innerHTML = '';
+    pricesData.categories.forEach((cat, ci) => {
+      list.appendChild(buildCategoryCard(cat, ci));
+    });
+  }
+
+  function buildCategoryCard(cat, ci) {
+    const card = document.createElement('div');
+    card.className = 'category-card';
+    card.dataset.ci = ci;
+
+    // Header
+    const head = document.createElement('div');
+    head.className = 'category-head';
+
+    const iconIn = document.createElement('input');
+    iconIn.type = 'text'; iconIn.className = 'category-icon-input';
+    iconIn.value = cat.icon || '✦'; iconIn.title = 'Category icon';
+    iconIn.oninput = () => { pricesData.categories[ci].icon = iconIn.value; };
+
+    const nameIn = document.createElement('input');
+    nameIn.type = 'text'; nameIn.className = 'category-name-input';
+    nameIn.value = cat.name; nameIn.placeholder = 'Category name';
+    nameIn.oninput = () => { pricesData.categories[ci].name = nameIn.value; };
+
+    const spacer = document.createElement('div'); spacer.style.flex = '1';
+
+    const moveUp = document.createElement('button');
+    moveUp.className = 'btn btn-ghost btn-sm'; moveUp.textContent = '↑'; moveUp.title = 'Move up';
+    moveUp.onclick = () => { if (ci > 0) { swap(pricesData.categories, ci, ci-1); renderCategories(); } };
+
+    const moveDown = document.createElement('button');
+    moveDown.className = 'btn btn-ghost btn-sm'; moveDown.textContent = '↓'; moveDown.title = 'Move down';
+    moveDown.onclick = () => { if (ci < pricesData.categories.length-1) { swap(pricesData.categories, ci, ci+1); renderCategories(); } };
+
+    const delCat = document.createElement('button');
+    delCat.className = 'btn btn-danger btn-sm'; delCat.textContent = 'Delete Category';
+    delCat.onclick = () => {
+      if (confirm('Delete "' + (pricesData.categories[ci].name || 'this category') + '" and all its services?')) {
+        pricesData.categories.splice(ci, 1);
+        renderCategories();
+      }
+    };
+
+    head.append(iconIn, nameIn, spacer, moveUp, moveDown, delCat);
+
+    // Services table
+    const table = document.createElement('table');
+    table.className = 'services-table';
+    table.innerHTML = `<thead><tr>
+      <th style="width:45%">Service Name</th>
+      <th style="width:18%">Price (£)</th>
+      <th style="width:22%">Label if no price</th>
+      <th></th>
+    </tr></thead>`;
+    const tbody = document.createElement('tbody');
+    cat.services.forEach((svc, si) => {
+      tbody.appendChild(buildServiceRow(svc, ci, si));
+    });
+    table.appendChild(tbody);
+
+    // Footer
+    const footer = document.createElement('div');
+    footer.className = 'category-footer';
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn btn-ghost btn-sm'; addBtn.textContent = '+ Add Service';
+    addBtn.onclick = () => {
+      pricesData.categories[ci].services.push({ name: '', price: null, priceLabel: 'By Quotation' });
+      renderCategories();
+      // focus new row name input
+      setTimeout(() => {
+        const rows = card.querySelectorAll('.svc-name-input');
+        if (rows.length) rows[rows.length-1].focus();
+      }, 50);
+    };
+    footer.appendChild(addBtn);
+
+    card.append(head, table, footer);
+    return card;
+  }
+
+  function buildServiceRow(svc, ci, si) {
+    const tr = document.createElement('tr');
+
+    const tdName = document.createElement('td');
+    const nameIn = document.createElement('input');
+    nameIn.type = 'text'; nameIn.className = 'svc-name-input';
+    nameIn.value = svc.name; nameIn.placeholder = 'Service name';
+    nameIn.oninput = () => { pricesData.categories[ci].services[si].name = nameIn.value; };
+    tdName.appendChild(nameIn);
+
+    const tdPrice = document.createElement('td');
+    const poaWrap = document.createElement('div');
+    poaWrap.className = 'svc-poa-wrap';
+    const poaCheck = document.createElement('input');
+    poaCheck.type = 'checkbox'; poaCheck.checked = (svc.price === null || svc.price === undefined);
+    poaCheck.title = 'No fixed price (e.g. By Quotation)';
+    const priceIn = document.createElement('input');
+    priceIn.type = 'number'; priceIn.className = 'svc-price-input';
+    priceIn.value = (svc.price != null ? svc.price : ''); priceIn.placeholder = '0.00';
+    priceIn.min = '0'; priceIn.step = '0.50';
+    priceIn.disabled = poaCheck.checked;
+    priceIn.oninput = () => {
+      const v = parseFloat(priceIn.value);
+      pricesData.categories[ci].services[si].price = isNaN(v) ? null : v;
+    };
+    poaCheck.onchange = () => {
+      priceIn.disabled = poaCheck.checked;
+      if (poaCheck.checked) {
+        pricesData.categories[ci].services[si].price = null;
+        priceIn.value = '';
+      } else {
+        pricesData.categories[ci].services[si].price = parseFloat(priceIn.value) || 0;
+      }
+    };
+    poaWrap.append(poaCheck, document.createTextNode('POA'));
+    tdPrice.append(priceIn, poaWrap);
+
+    const tdLabel = document.createElement('td');
+    const labelIn = document.createElement('input');
+    labelIn.type = 'text'; labelIn.className = 'svc-label-input';
+    labelIn.value = svc.priceLabel || svc.label || '';
+    labelIn.placeholder = 'By Quotation';
+    labelIn.oninput = () => { pricesData.categories[ci].services[si].priceLabel = labelIn.value; };
+    tdLabel.appendChild(labelIn);
+
+    const tdAct = document.createElement('td');
+    tdAct.className = 'svc-actions';
+
+    const moveUp = document.createElement('button');
+    moveUp.className = 'btn btn-ghost btn-sm'; moveUp.textContent = '↑'; moveUp.title = 'Move up';
+    moveUp.onclick = () => {
+      if (si > 0) { swap(pricesData.categories[ci].services, si, si-1); renderCategories(); }
+    };
+    const moveDown = document.createElement('button');
+    moveDown.className = 'btn btn-ghost btn-sm'; moveDown.textContent = '↓'; moveDown.title = 'Move down';
+    moveDown.onclick = () => {
+      if (si < pricesData.categories[ci].services.length-1) { swap(pricesData.categories[ci].services, si, si+1); renderCategories(); }
+    };
+    const del = document.createElement('button');
+    del.className = 'btn btn-danger btn-sm'; del.textContent = '✕';
+    del.onclick = () => { pricesData.categories[ci].services.splice(si, 1); renderCategories(); };
+
+    tdAct.append(moveUp, moveDown, del);
+    tr.append(tdName, tdPrice, tdLabel, tdAct);
+    return tr;
+  }
+
+  function addCategory() {
+    pricesData.categories.push({ id: uid(), name: 'New Category', icon: '✦', services: [] });
+    renderCategories();
+    // focus the new name input
+    setTimeout(() => {
+      const inputs = document.querySelectorAll('.category-name-input');
+      if (inputs.length) inputs[inputs.length-1].focus();
+    }, 50);
+  }
+
+  function swap(arr, i, j) { const t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+
+  // ═══════════════════════════════════════════════════════
+  // OPENING HOURS
+  // ═══════════════════════════════════════════════════════
+  function renderHoursGrid() {
+    const grid = document.getElementById('hoursGrid');
+    grid.innerHTML = '';
+    hoursData.days.forEach((d, di) => {
+      const card = document.createElement('div');
+      card.className = 'hours-day-card';
+
+      const dayName = document.createElement('div');
+      dayName.className = 'hours-day-name';
+      dayName.textContent = d.day;
+
+      const closedWrap = document.createElement('label');
+      closedWrap.className = 'hours-closed-wrap';
+      const closedCheck = document.createElement('input');
+      closedCheck.type = 'checkbox'; closedCheck.checked = !!d.closed;
+      const closedLabel = document.createTextNode(' Closed');
+      closedWrap.append(closedCheck, closedLabel);
+
+      const timesWrap = document.createElement('div');
+      timesWrap.className = 'hours-times';
+
+      const opensIn = document.createElement('input');
+      opensIn.type = 'text'; opensIn.className = 'hours-time-input';
+      opensIn.value = d.opens || ''; opensIn.placeholder = '9:00am';
+      opensIn.oninput = () => { hoursData.days[di].opens = opensIn.value; };
+
+      const sep = document.createElement('span');
+      sep.className = 'hours-time-sep'; sep.textContent = '–';
+
+      const closesIn = document.createElement('input');
+      closesIn.type = 'text'; closesIn.className = 'hours-time-input';
+      closesIn.value = d.closes || ''; closesIn.placeholder = '5:00pm';
+      closesIn.oninput = () => { hoursData.days[di].closes = closesIn.value; };
+
+      function toggleClosed() {
+        const isClosed = closedCheck.checked;
+        hoursData.days[di].closed = isClosed;
+        opensIn.disabled = isClosed;
+        closesIn.disabled = isClosed;
+        timesWrap.style.opacity = isClosed ? '.35' : '1';
+      }
+      closedCheck.onchange = toggleClosed;
+      toggleClosed();
+
+      timesWrap.append(opensIn, sep, closesIn);
+      card.append(dayName, closedWrap, timesWrap);
+      grid.appendChild(card);
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // SAVE / DOWNLOAD
+  // ═══════════════════════════════════════════════════════
+  function downloadJSON(obj, filename) {
+    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function downloadAll() {
+    downloadJSON(pricesData, 'prices.json');
+    setTimeout(() => downloadJSON(hoursData, 'hours.json'), 300);
+    toast('Downloaded prices.json & hours.json');
+  }
+
+  // ─── GitHub API ──────────────────────────────────────────
+  function restoreGhSettings() {
+    const s = JSON.parse(sessionStorage.getItem('ghSettings') || '{}');
+    if (s.token)  document.getElementById('ghToken').value  = s.token;
+    if (s.owner)  document.getElementById('ghOwner').value  = s.owner;
+    if (s.repo)   document.getElementById('ghRepo').value   = s.repo;
+    if (s.branch) document.getElementById('ghBranch').value = s.branch;
+  }
+
+  function saveGhSettings() {
+    sessionStorage.setItem('ghSettings', JSON.stringify({
+      token:  document.getElementById('ghToken').value,
+      owner:  document.getElementById('ghOwner').value,
+      repo:   document.getElementById('ghRepo').value,
+      branch: document.getElementById('ghBranch').value
+    }));
+  }
+
+  async function commitFile(token, owner, repo, branch, path, content, message) {
+    const apiBase = 'https://api.github.com';
+    // Get current SHA
+    let sha = null;
+    try {
+      const res = await fetch(`${apiBase}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, {
+        headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' }
+      });
+      if (res.ok) { const d = await res.json(); sha = d.sha; }
+    } catch(_) {}
+
+    const body = { message, content: btoa(unescape(encodeURIComponent(content))), branch };
+    if (sha) body.sha = sha;
+
+    const res = await fetch(`${apiBase}/repos/${owner}/${repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || res.statusText);
+    }
+    return res.json();
+  }
+
+  async function saveToGitHub() {
+    const token  = document.getElementById('ghToken').value.trim();
+    const owner  = document.getElementById('ghOwner').value.trim();
+    const repo   = document.getElementById('ghRepo').value.trim();
+    const branch = document.getElementById('ghBranch').value.trim();
+
+    if (!token) {
+      toast('Enter your GitHub token in Settings first.', 'error');
+      switchTab('settings', document.querySelectorAll('.tab-btn')[2]);
+      return;
+    }
+
+    toast('Saving to GitHub…');
+    const stamp = new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+
+    try {
+      await Promise.all([
+        commitFile(token, owner, repo, branch, 'prices.json',
+          JSON.stringify(pricesData, null, 2), `Update prices.json (${stamp})`),
+        commitFile(token, owner, repo, branch, 'hours.json',
+          JSON.stringify(hoursData,  null, 2), `Update hours.json (${stamp})`)
+      ]);
+      toast('Saved to GitHub successfully!', 'success');
+    } catch(e) {
+      toast('GitHub error: ' + e.message, 'error');
+    }
+  }
+
+  // ─── Change password ─────────────────────────────────────
+  async function generateHash() {
+    const pw = document.getElementById('newPasswordInput').value;
+    if (!pw) { toast('Enter a password first.', 'error'); return; }
+    const hash = await sha256(pw);
+    const display = document.getElementById('hashDisplay');
+    display.style.display = 'block';
+    display.textContent = hash;
+    display.onclick = () => { navigator.clipboard.writeText(hash); toast('Hash copied to clipboard!'); };
+    display.title = 'Click to copy';
+    display.style.cursor = 'pointer';
+    toast('Hash generated — copy it into admin.html');
+  }
+</script>
+</body>
+</html>

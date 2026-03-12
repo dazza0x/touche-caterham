@@ -303,14 +303,8 @@
         </div>
         <div class="contact-block">
           <p class="contact-label">Opening Hours</p>
-          <table class="hours-table">
-            <tr><td>Monday</td><td>9:00am – 5:00pm</td></tr>
-            <tr><td>Tuesday</td><td>9:00am – 5:00pm</td></tr>
-            <tr><td>Wednesday</td><td>9:00am – 8:00pm</td></tr>
-            <tr><td>Thursday</td><td>9:00am – 9:00pm</td></tr>
-            <tr><td>Friday</td><td>9:00am – 6:00pm</td></tr>
-            <tr><td>Saturday</td><td>8:00am – 5:00pm</td></tr>
-            <tr><td>Sunday</td><td>Closed</td></tr>
+          <table class="hours-table" id="hoursTable">
+            <tr><td colspan="2" style="color:var(--mist);font-size:.8rem;">Loading…</td></tr>
           </table>
         </div>
         <p style="font-size:.78rem;color:var(--mist);margin-top:1rem;line-height:1.7;">Our clients travel from Croydon, Selsdon, Sanderstead, Warlingham, Oxted, Godstone, Redhill and beyond. Easily reached by road, rail and bus.</p>
@@ -348,7 +342,7 @@
       <a href="#prices">Prices</a>
       <a href="#find-us">Find Us</a>
     </div>
-    <p class="footer-copy">&copy; Touché Hairdressing Caterham</p>
+    <p class="footer-copy">&copy; Touché Hairdressing Caterham &nbsp;·&nbsp; <a href="admin.html" style="opacity:.35;font-size:.65rem;letter-spacing:.1em;">Admin</a></p>
   </div>
 </footer>
 
@@ -369,65 +363,53 @@
   }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-  // ─────────────────────────────────────────────────
-  // PRICES — to update, change the numbers here,
-  // then save the file and commit to GitHub.
-  // ─────────────────────────────────────────────────
-  const PRICES = [
-    {
-      name: "Styling Services", icon: "✂", services: [
-        { name: "Ladies Cut & Finish",  price: 40 },
-        { name: "Mens Cut & Finish",    price: 28 },
-        { name: "Blow Dry — Short",     price: 25 },
-        { name: "Blow Dry — Long",      price: 30 }
-      ]
-    },
-    {
-      name: "Highlighting", icon: "✦", services: [
-        { name: "Full Head",            price: 109 },
-        { name: "Half Head",            price: 89 },
-        { name: "Quarter Head",         price: 65 },
-        { name: "Colour Minimum",       price: 37.50 },
-        { name: "Ultimate Balayage",    price: 135 }
-      ]
-    },
-    {
-      name: "Colouring", icon: "◉", services: [
-        { name: "Full Head Tint",       price: 66 },
-        { name: "Colour Regrowth",      price: 55 },
-        { name: "Semi Permanent",       price: 66 }
-      ]
-    },
-    {
-      name: "Perms & Treatments", icon: "〜", services: [
-        { name: "Perm — Short Hair",                  price: 70 },
-        { name: "Perm — Long Hair",                   price: 90 },
-        { name: "Smoothing Treatment (The Crown)",    price: null, label: "By Quotation" },
-        { name: "Hair Extensions",                    price: null, label: "By Quotation" }
-      ]
-    }
-  ];
+  // ─── Prices ───────────────────────────────────────
+  function renderPrices(categories) {
+    document.getElementById('priceGrid').innerHTML = categories.map(cat => `
+      <div class="price-category">
+        <div class="price-category-header">
+          <span class="price-icon">${cat.icon}</span>
+          <span class="price-category-name">${cat.name}</span>
+        </div>
+        <ul class="price-list">
+          ${cat.services.map(s => `
+            <li class="price-item">
+              <span class="price-name">${s.name}</span>
+              <span class="price-value">${s.price != null
+                ? 'From &pound;' + (Number.isInteger(s.price) ? s.price : Number(s.price).toFixed(2))
+                : (s.priceLabel || s.label || 'POA')}</span>
+            </li>`).join('')}
+        </ul>
+      </div>`).join('');
+  }
 
-  document.getElementById('priceGrid').innerHTML = PRICES.map(cat => `
-    <div class="price-category">
-      <div class="price-category-header">
-        <span class="price-icon">${cat.icon}</span>
-        <span class="price-category-name">${cat.name}</span>
-      </div>
-      <ul class="price-list">
-        ${cat.services.map(s => `
-          <li class="price-item">
-            <span class="price-name">${s.name}</span>
-            <span class="price-value">${s.price != null ? 'From &pound;' + (Number.isInteger(s.price) ? s.price : s.price.toFixed(2)) : (s.label || 'POA')}</span>
-          </li>`).join('')}
-      </ul>
-    </div>`).join('');
+  fetch('prices.json')
+    .then(r => r.json())
+    .then(data => renderPrices(data.categories))
+    .catch(() => {
+      document.getElementById('priceGrid').innerHTML =
+        '<p style="padding:2rem;color:var(--mist);">Prices unavailable — please call us on <a href="tel:+441883340771" style="color:var(--copper)">01883 340771</a>.</p>';
+    });
 
-  // ─────────────────────────────────────────────────
-  // GALLERY — replace empty src values with your own
-  // image paths e.g. 'images/balayage.jpg'
-  // Put image files in an /images/ folder in the repo.
-  // ─────────────────────────────────────────────────
+  // ─── Opening Hours ─────────────────────────────────
+  function renderHours(days) {
+    document.getElementById('hoursTable').innerHTML = days.map(d => `
+      <tr>
+        <td>${d.day}</td>
+        <td>${d.closed ? 'Closed' : d.opens + ' \u2013 ' + d.closes}</td>
+      </tr>`).join('');
+  }
+
+  fetch('hours.json')
+    .then(r => r.json())
+    .then(data => renderHours(data.days))
+    .catch(() => {
+      document.getElementById('hoursTable').innerHTML =
+        '<tr><td colspan="2" style="color:var(--mist);">Please call for opening times.</td></tr>';
+    });
+
+  // ─── Gallery ──────────────────────────────────────
+  // Add your own images to the /images/ folder and update the src values below.
   const GALLERY = [
     { src: 'https://b3021104.smushcdn.com/3021104/wp-content/uploads/2022/06/lumi-styling.jpg?lossy=0&strip=1&webp=1', tag: 'Styling' },
     { src: 'https://b3021104.smushcdn.com/3021104/wp-content/uploads/2022/06/keune-social-models.jpg?lossy=0&strip=1&webp=1', tag: 'Colour' },
