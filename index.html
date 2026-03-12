@@ -117,10 +117,12 @@
     .section-title em { font-style: italic; color: var(--copper); }
     .divider { width: 40px; height: 1px; background: var(--copper); margin: 1.25rem 0 2rem; }
 
-    .trust-strip { background: var(--cream); padding: 1.5rem clamp(1.25rem,5vw,3rem); border-top: 1px solid rgba(196,149,122,.15); border-bottom: 1px solid rgba(196,149,122,.15); }
-    .trust-strip .container { display: flex; justify-content: center; gap: clamp(2rem,6vw,5rem); flex-wrap: wrap; align-items: center; }
-    .trust-item { display: flex; align-items: center; gap: .6rem; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--espresso); }
-    .trust-item .icon { color: var(--copper); }
+    .ticker-wrap { background: var(--cream); border-top: 1px solid rgba(196,149,122,.15); border-bottom: 1px solid rgba(196,149,122,.15); overflow: hidden; padding: 1rem 0; }
+    .ticker-track { display: flex; width: max-content; animation: ticker 32s linear infinite; }
+    .ticker-wrap:hover .ticker-track { animation-play-state: paused; }
+    .ticker-item { display: flex; align-items: center; gap: .6rem; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--espresso); white-space: nowrap; padding: 0 3rem; }
+    .ticker-item .icon { color: var(--copper); font-size: .7rem; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
     #prices { background: var(--white); }
     .price-intro { background: var(--cream); border-left: 3px solid var(--copper); padding: 1rem 1.25rem; font-size: .8rem; color: var(--bark); line-height: 1.7; margin-bottom: 3rem; }
@@ -259,13 +261,23 @@
   </div>
 </header>
 
-<div class="trust-strip">
-  <div class="container">
-    <div class="trust-item"><span class="icon">✦</span> Award-Winning Stylists</div>
-    <div class="trust-item"><span class="icon">✦</span> Oligo Colour Specialists</div>
-    <div class="trust-item"><span class="icon">✦</span> OPC Hair Care &amp; Treatments</div>
-    <div class="trust-item"><span class="icon">✦</span> The Crown Smoothing Treatment</div>
-    <div class="trust-item"><span class="icon">✦</span> Easy Online Booking</div>
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="icon">✦</span> Award-Winning Stylists</div>
+    <div class="ticker-item"><span class="icon">✦</span> Oligo Colour Specialists</div>
+    <div class="ticker-item"><span class="icon">✦</span> OPC Hair Care &amp; Treatments</div>
+    <div class="ticker-item"><span class="icon">✦</span> The Crown Smoothing Treatment</div>
+    <div class="ticker-item"><span class="icon">✦</span> Easy Online Booking</div>
+    <div class="ticker-item"><span class="icon">✦</span> Eco Friendly Salon</div>
+    <div class="ticker-item"><span class="icon">✦</span> Vegan Products</div>
+    <!-- Duplicate for seamless loop -->
+    <div class="ticker-item"><span class="icon">✦</span> Award-Winning Stylists</div>
+    <div class="ticker-item"><span class="icon">✦</span> Oligo Colour Specialists</div>
+    <div class="ticker-item"><span class="icon">✦</span> OPC Hair Care &amp; Treatments</div>
+    <div class="ticker-item"><span class="icon">✦</span> The Crown Smoothing Treatment</div>
+    <div class="ticker-item"><span class="icon">✦</span> Easy Online Booking</div>
+    <div class="ticker-item"><span class="icon">✦</span> Eco Friendly Salon</div>
+    <div class="ticker-item"><span class="icon">✦</span> Vegan Products</div>
   </div>
 </div>
 
