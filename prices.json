@@ -1,0 +1,50 @@
+{
+  "lastUpdated": "March 2026",
+  "note": "All prices include VAT, professional shampoos, conditioners and refreshments. All quoted prices are 'from' — please call to confirm before booking.",
+  "categories": [
+    {
+      "id": "styling",
+      "name": "Styling Services",
+      "icon": "✂",
+      "services": [
+        { "name": "Ladies Cut & Finish", "price": 40 },
+        { "name": "Mens Cut & Finish", "price": 28 },
+        { "name": "Blow Dry — Short", "price": 25 },
+        { "name": "Blow Dry — Long", "price": 30 }
+      ]
+    },
+    {
+      "id": "highlighting",
+      "name": "Highlighting",
+      "icon": "✦",
+      "services": [
+        { "name": "Full Head", "price": 109 },
+        { "name": "Half Head", "price": 89 },
+        { "name": "Quarter Head", "price": 65 },
+        { "name": "Colour Minimum", "price": 37.50 },
+        { "name": "Ultimate Balayage", "price": 135 }
+      ]
+    },
+    {
+      "id": "colouring",
+      "name": "Colouring",
+      "icon": "◉",
+      "services": [
+        { "name": "Full Head Tint", "price": 66 },
+        { "name": "Colour Regrowth", "price": 55 },
+        { "name": "Semi Permanent", "price": 66 }
+      ]
+    },
+    {
+      "id": "perms",
+      "name": "Perms & Treatments",
+      "icon": "〜",
+      "services": [
+        { "name": "Perm — Short Hair", "price": 70 },
+        { "name": "Perm — Long Hair", "price": 90 },
+        { "name": "Smoothing Treatment (The Crown)", "price": null, "priceLabel": "By Quotation" },
+        { "name": "Hair Extensions", "price": null, "priceLabel": "By Quotation" }
+      ]
+    }
+  ]
+}
