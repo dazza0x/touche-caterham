@@ -184,6 +184,20 @@
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
     .reveal.visible { opacity: 1; transform: none; }
 
+    #back-to-top {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 200;
+      width: 44px; height: 44px; background: var(--espresso);
+      border: 1px solid rgba(196,149,122,.35); color: var(--copper);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0; pointer-events: none;
+      transition: opacity .3s, background .2s, transform .2s;
+    }
+    #back-to-top.visible { opacity: 1; pointer-events: auto; }
+    #back-to-top:hover { background: var(--bark); transform: translateY(-2px); }
+
+    .reviews-section { background: var(--ivory); padding: clamp(3rem,6vw,5rem) clamp(1.25rem,5vw,3rem); text-align: center; }
+    .reviews-section .container { max-width: var(--max-w); margin: 0 auto; }
+
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; }
       .hero-image { min-height: 320px; }
@@ -203,10 +217,10 @@
 <body>
 
 <nav id="navbar">
-  <a href="/" class="nav-brand">
+  <div class="nav-brand">
     <span class="accent">Touché</span>
     <span class="sub">Hairdressing · Caterham</span>
-  </a>
+  </div>
   <ul class="nav-links">
     <li><a href="#prices">Prices</a></li>
     <li><a href="#gallery">Gallery</a></li>
@@ -331,6 +345,13 @@
   </div>
 </section>
 
+<div class="reviews-section">
+  <div class="container">
+    <script async src="https://www.salonspy.com/widgets/v2/dist/js/widget.min.js"></script>
+    <salonspy-widget data-token="cb38b69e49a0d4ace4aa6e8e24d82dcb" data-type="salon"></salonspy-widget>
+  </div>
+</div>
+
 <div class="book-banner">
   <p class="section-label">Ready?</p>
   <h2>Book your next <em>appointment</em></h2>
@@ -340,6 +361,10 @@
     <a href="https://s-iq.co/BookingPortal/dist/?salonid=5d4b7112-81b5-464b-9ccf-8835ad6793a3&tab=contact&showSalons=1" target="_blank" class="btn-primary">Book Online</a>
   </div>
 </div>
+
+<button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
 
 <footer>
   <div class="footer-inner">
@@ -355,9 +380,13 @@
 </footer>
 
 <script>
-  // Nav scroll shadow
+  // Nav scroll shadow + back-to-top visibility
   const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 30); });
+  const backToTop = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 30);
+    backToTop.classList.toggle('visible', window.scrollY > 400);
+  });
 
   // Mobile menu
   const hamburger = document.getElementById('hamburger');
