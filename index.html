@@ -73,8 +73,8 @@
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--nav-h); background: var(--espresso); display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(1.25rem,5vw,3rem); transition: box-shadow .3s; }
     nav.scrolled { box-shadow: 0 2px 24px rgba(59,53,48,.4); }
     .nav-brand { display: flex; flex-direction: column; line-height: 1.1; }
-    .nav-brand .accent { font-family: var(--font-display); font-style: italic; font-weight: 300; font-size: 1.5rem; color: var(--copper); }
-    .nav-brand .sub { font-size: .62rem; letter-spacing: .22em; text-transform: uppercase; color: var(--mist); }
+    .nav-brand .accent { font-family: var(--font-display); font-style: italic; font-weight: 300; font-size: 1.75rem; color: var(--copper); }
+    .nav-brand .sub { font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; color: #D4C8BC; }
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a { font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; color: var(--cream); transition: color .2s; }
     .nav-links a:hover { color: var(--copper); }
@@ -95,7 +95,9 @@
     .hero-eyebrow { font-size: .68rem; letter-spacing: .28em; text-transform: uppercase; color: var(--copper); margin-bottom: 1.5rem; }
     .hero-heading { font-family: var(--font-display); font-weight: 300; font-size: clamp(3rem,5.5vw,5.5rem); line-height: 1.05; color: var(--white); margin-bottom: 1.5rem; }
     .hero-heading em { font-style: italic; color: var(--copper); }
-    .hero-sub { font-size: .9rem; color: var(--mist); max-width: 380px; line-height: 1.75; margin-bottom: 2.5rem; }
+    .hero-sub { font-size: .95rem; color: #C8BDB5; max-width: 380px; line-height: 1.75; margin-bottom: 2rem; }
+    .hero-phone { display: block; margin-top: 1rem; font-family: var(--font-display); font-size: 1.4rem; color: var(--copper); letter-spacing: .05em; transition: color .2s; }
+    .hero-phone:hover { color: var(--rose); }
     .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
     .btn-primary { display: inline-block; background: var(--copper); color: var(--white); padding: .8rem 2rem; font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; transition: background .2s, transform .2s; }
     .btn-primary:hover { background: var(--rose); transform: translateY(-1px); }
@@ -117,7 +119,7 @@
 
     .trust-strip { background: var(--cream); padding: 1.5rem clamp(1.25rem,5vw,3rem); border-top: 1px solid rgba(196,149,122,.15); border-bottom: 1px solid rgba(196,149,122,.15); }
     .trust-strip .container { display: flex; justify-content: center; gap: clamp(2rem,6vw,5rem); flex-wrap: wrap; align-items: center; }
-    .trust-item { display: flex; align-items: center; gap: .6rem; font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--bark); }
+    .trust-item { display: flex; align-items: center; gap: .6rem; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--espresso); }
     .trust-item .icon { color: var(--copper); }
 
     #prices { background: var(--white); }
@@ -130,14 +132,14 @@
     .price-list { list-style: none; }
     .price-item { display: flex; justify-content: space-between; align-items: baseline; padding: .55rem 0; border-bottom: 1px solid var(--cream); gap: 1rem; }
     .price-item:last-child { border-bottom: none; }
-    .price-name { font-size: .85rem; color: var(--bark); }
-    .price-value { font-family: var(--font-display); font-size: 1.05rem; color: var(--espresso); white-space: nowrap; flex-shrink: 0; }
-    .price-note { margin-top: 2rem; font-size: .72rem; color: var(--mist); text-align: center; }
+    .price-name { font-size: .9rem; color: var(--espresso); }
+    .price-value { font-family: var(--font-display); font-size: 1.1rem; color: var(--espresso); white-space: nowrap; flex-shrink: 0; }
+    .price-note { margin-top: 2rem; font-size: .78rem; color: var(--bark); text-align: center; }
 
     #gallery { background: var(--espresso); }
     #gallery .section-title { color: var(--white); }
     #gallery .section-label { color: var(--rose); }
-    .gallery-intro { font-size: .85rem; color: var(--mist); max-width: 500px; margin-bottom: 2.5rem; line-height: 1.7; }
+    .gallery-intro { font-size: .9rem; color: var(--cream); max-width: 500px; margin-bottom: 2.5rem; line-height: 1.7; }
     .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; }
     .gallery-item { position: relative; overflow: hidden; aspect-ratio: 1; background: var(--bark); cursor: pointer; }
     .gallery-item:nth-child(1) { grid-column: span 2; aspect-ratio: 2/1; }
@@ -158,8 +160,8 @@
     .contact-value { font-size: 1rem; color: var(--espresso); }
     .contact-value a:hover { color: var(--copper); }
     .hours-table { width: 100%; border-collapse: collapse; margin-top: .5rem; }
-    .hours-table td { padding: .35rem 0; font-size: .85rem; color: var(--bark); border-bottom: 1px solid var(--cream); }
-    .hours-table td:first-child { color: var(--mist); width: 130px; }
+    .hours-table td { padding: .35rem 0; font-size: .9rem; color: var(--espresso); border-bottom: 1px solid var(--cream); }
+    .hours-table td:first-child { color: var(--bark); width: 130px; }
     .hours-table tr:last-child td { border: none; }
     .map-wrap { border: 1px solid rgba(196,149,122,.2); overflow: hidden; }
     .map-wrap iframe { display: block; width: 100%; height: 380px; border: none; }
@@ -167,7 +169,7 @@
     .book-banner { background: var(--bark); padding: clamp(3rem,6vw,5rem) clamp(1.25rem,5vw,3rem); text-align: center; }
     .book-banner h2 { font-family: var(--font-display); font-weight: 300; font-size: clamp(2rem,4vw,3rem); color: var(--white); margin: .5rem 0 .75rem; }
     .book-banner h2 em { font-style: italic; color: var(--copper); }
-    .book-banner p { font-size: .85rem; color: var(--mist); margin-bottom: 2rem; }
+    .book-banner p { font-size: .9rem; color: var(--cream); margin-bottom: 2rem; }
     .book-banner .phone { font-family: var(--font-display); font-size: 1.6rem; color: var(--copper); display: block; margin-bottom: 1.5rem; }
     .book-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
@@ -175,9 +177,9 @@
     .footer-inner { max-width: var(--max-w); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
     .footer-brand { font-family: var(--font-display); font-style: italic; font-size: 1.5rem; color: var(--copper); }
     .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-    .footer-links a { font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; color: var(--mist); transition: color .2s; }
+    .footer-links a { font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: #B8ADA5; transition: color .2s; }
     .footer-links a:hover { color: var(--copper); }
-    .footer-copy { font-size: .7rem; color: var(--mist); }
+    .footer-copy { font-size: .72rem; color: #B8ADA5; }
 
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
     .reveal.visible { opacity: 1; transform: none; }
@@ -232,6 +234,7 @@
       <a href="https://s-iq.co/BookingPortal/dist/?salonid=5d4b7112-81b5-464b-9ccf-8835ad6793a3&tab=contact&showSalons=1" target="_blank" class="btn-primary">Book an Appointment</a>
       <a href="#prices" class="btn-ghost">View Prices</a>
     </div>
+    <a href="tel:+441883340771" class="hero-phone">01883 340771</a>
   </div>
   <div class="hero-image">
     <img src="https://b3021104.smushcdn.com/3021104/wp-content/uploads/2022/06/lumi-styling.jpg?lossy=0&strip=1&webp=1" alt="Expert hair styling at Touché Hairdressing Caterham" loading="eager" />
@@ -245,7 +248,8 @@
 <div class="trust-strip">
   <div class="container">
     <div class="trust-item"><span class="icon">✦</span> Award-Winning Stylists</div>
-    <div class="trust-item"><span class="icon">✦</span> OPC &amp; Oligo Colour Specialists</div>
+    <div class="trust-item"><span class="icon">✦</span> Oligo Colour Specialists</div>
+    <div class="trust-item"><span class="icon">✦</span> OPC Hair Care &amp; Treatments</div>
     <div class="trust-item"><span class="icon">✦</span> The Crown Smoothing Treatment</div>
     <div class="trust-item"><span class="icon">✦</span> Easy Online Booking</div>
   </div>
