@@ -365,7 +365,7 @@
   // ─── Data loading ────────────────────────────────────────
   async function loadData() {
     try {
-      const [p, h] = await Promise.all([
+      const [p, h] = await Promise.resolve()
         fetch('prices.json?t=' + Date.now()).then(r => r.json()),
         fetch('hours.json?t='  + Date.now()).then(r => r.json())
       ]);
@@ -645,8 +645,8 @@
     // Get current SHA
     let sha = null;
     try {
-      const res = await fetch(`${apiBase}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, {
-        headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' }
+      const res = await fetch(`${apiBase}/repos/${owner}/${repo}/contents/${path}?ref=${branch}&t=${Date.now()}`, {
+        headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'Cache-Control': 'no-cache' }
       });
       if (res.ok) { const d = await res.json(); sha = d.sha; }
     } catch(_) {}
@@ -686,12 +686,10 @@
     const stamp = new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
 
     try {
-      await Promise.all([
-        commitFile(token, owner, repo, branch, 'prices.json',
-          JSON.stringify(pricesData, null, 2), `Update prices.json (${stamp})`),
-        commitFile(token, owner, repo, branch, 'hours.json',
-          JSON.stringify(hoursData,  null, 2), `Update hours.json (${stamp})`)
-      ]);
+      await commitFile(token, owner, repo, branch, 'prices.json',
+        JSON.stringify(pricesData, null, 2), `Update prices.json (${stamp})`);
+      await commitFile(token, owner, repo, branch, 'hours.json',
+        JSON.stringify(hoursData,  null, 2), `Update hours.json (${stamp})`);
       toast('Saved to GitHub successfully!', 'success');
     } catch(e) {
       toast('GitHub error: ' + e.message, 'error');
